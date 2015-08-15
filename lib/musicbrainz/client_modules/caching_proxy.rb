@@ -13,7 +13,9 @@ module MusicBrainz
       def get_contents(url)
         return super unless caching?
 
-        hash = Digest::SHA256.hexdigest(url)
+        hashable_url = url.dup
+        hashable_url.gsub!(/[&?]fmt=xml/,"")
+        hash = Digest::SHA256.hexdigest(hashable_url)
         dir_path = [cache_path, *(0..2).map{ |i| hash.slice(2*i, 2) }].join(?/)
         file_path = [dir_path, '/', hash.slice(6, 58), '.xml'].join
 

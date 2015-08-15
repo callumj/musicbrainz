@@ -38,6 +38,7 @@ module MusicBrainz
   private
 
     def build_url(resource, params)
+      params[:fmt] = "xml"
       "#{MusicBrainz.config.web_service_url}#{resource.to_s.gsub('_', '-')}" <<
       ((id = params.delete(:id)) ? "/#{id}?" : "?") <<
       params.map do |key, value|

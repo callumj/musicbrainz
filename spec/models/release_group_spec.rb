@@ -30,7 +30,7 @@ describe MusicBrainz::ReleaseGroup do
       it "searches release group by artist name and title" do
         response = File.open(File.join(File.dirname(__FILE__), "../fixtures/release_group/search.xml")).read
         allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-          .with('http://musicbrainz.org/ws/2/release-group?query=artist:"Kasabian" AND releasegroup:"Empire"&limit=10')
+          .with('http://musicbrainz.org/ws/2/release-group?query=artist:"Kasabian" AND releasegroup:"Empire"&limit=10&fmt=xml')
           .and_return({ status: 200, body: response})
 
         matches = MusicBrainz::ReleaseGroup.search('Kasabian', 'Empire')
@@ -54,12 +54,12 @@ describe MusicBrainz::ReleaseGroup do
     it "gets first release group by artist name and title" do
       response = File.open(File.join(File.dirname(__FILE__), "../fixtures/release_group/search.xml")).read
       allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-        .with('http://musicbrainz.org/ws/2/release-group?query=artist:"Kasabian" AND releasegroup:"Empire"&limit=10')
+        .with('http://musicbrainz.org/ws/2/release-group?query=artist:"Kasabian" AND releasegroup:"Empire"&limit=10&fmt=xml')
         .and_return({ status: 200, body: response})
 
       response = File.open(File.join(File.dirname(__FILE__), "../fixtures/release_group/entity.xml")).read
       allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-        .with('http://musicbrainz.org/ws/2/release-group/6f33e0f0-cde2-38f9-9aee-2c60af8d1a61?inc=url-rels')
+        .with('http://musicbrainz.org/ws/2/release-group/6f33e0f0-cde2-38f9-9aee-2c60af8d1a61?inc=url-rels&fmt=xml')
         .and_return({ status: 200, body: response})
       release_group = MusicBrainz::ReleaseGroup.find_by_artist_and_title('Kasabian', 'Empire')
       expect(release_group.id).to eq '6f33e0f0-cde2-38f9-9aee-2c60af8d1a61'
@@ -69,11 +69,11 @@ describe MusicBrainz::ReleaseGroup do
   describe '#releases' do
     it "gets correct release group's releases" do
       allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-        .with('http://musicbrainz.org/ws/2/release-group/6f33e0f0-cde2-38f9-9aee-2c60af8d1a61?inc=url-rels')
+        .with('http://musicbrainz.org/ws/2/release-group/6f33e0f0-cde2-38f9-9aee-2c60af8d1a61?inc=url-rels&fmt=xml')
         .and_return({ status: 200, body: File.open(File.join(File.dirname(__FILE__), "../fixtures/release_group/entity.xml")).read})
 
       allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-        .with('http://musicbrainz.org/ws/2/release?release-group=6f33e0f0-cde2-38f9-9aee-2c60af8d1a61&inc=media+release-groups&limit=100')
+        .with('http://musicbrainz.org/ws/2/release?release-group=6f33e0f0-cde2-38f9-9aee-2c60af8d1a61&inc=media+release-groups&limit=100&fmt=xml')
         .and_return({ status: 200, body: File.open(File.join(File.dirname(__FILE__), "../fixtures/release/list.xml")).read})
 
       releases = MusicBrainz::ReleaseGroup.find("6f33e0f0-cde2-38f9-9aee-2c60af8d1a61").releases
