@@ -26,7 +26,9 @@ module MusicBrainz
       end
 
       def search(name)
-				super({artist: name})
+        name = "\"#{escape_string name}\""
+        underscored_name = underscore_name
+        client.load(underscored_name.to_sym, { query: name, limit: 10 }, { binding: underscored_name.insert(-1,"_search").to_sym })
       end
 
       def discography(mbid)

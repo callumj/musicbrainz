@@ -23,7 +23,7 @@ describe MusicBrainz::Artist do
   it "should return search results in the right order and pass back the correct score" do
     response = File.open(File.join(File.dirname(__FILE__), "../fixtures/artist/search.xml")).read
     allow_any_instance_of(MusicBrainz::Client).to receive(:get_contents)
-      .with('http://musicbrainz.org/ws/2/artist?query=artist:"Chris+Martin"&limit=10&fmt=xml')
+      .with('http://musicbrainz.org/ws/2/artist?query="Chris+Martin"&limit=10&fmt=xml')
       .and_return({ status: 200, body: response})
 
     matches = MusicBrainz::Artist.search('Chris Martin')

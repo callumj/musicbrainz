@@ -53,8 +53,12 @@ module MusicBrainz
 				arr.join(' AND ')
 			end
 
+      def escape_string(str)
+        CGI.escape(str).gsub(/\!/, '\!')
+      end
+
 			def escape_strings(hash)
-				hash.each { |k, v| hash[k] = CGI.escape(v).gsub(/\!/, '\!') }
+				hash.each { |k, v| hash[k] = escape_string(v) }
 				hash
 			end
 
